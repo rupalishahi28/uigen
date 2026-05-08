@@ -1,0 +1,28 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: anthropics/claude-code-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          direct_prompt: |
+            Review this PR for a UI component generator (React/TypeScript).
+            Focus on:
+            - Component API design and prop types
+            - Reusability and composability
+            - Accessibility (WCAG compliance)
+            - Performance considerations
+            - TypeScript correctness
+            Provide actionable, concise feedback.
